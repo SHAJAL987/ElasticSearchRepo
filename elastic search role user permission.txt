@@ -1,0 +1,4 @@
+1) Change All passsword:
+------------------------
+bin/elasticsearch-setup-passwords auto
+

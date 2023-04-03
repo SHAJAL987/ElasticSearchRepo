@@ -1,0 +1,297 @@
+GET /_cluster/health
+
+GET /_cat/nodes?v
+
+GET /_cat/nodes
+
+GET /_cat/indices/?v
+
+GET /_cat/indices/?v&expand_wildcards=all
+
+PUT /pages
+
+GET /_cat/shards?v
+
+DELETE /pages
+
+GET /reviews/_search
+{
+  "query": {
+    "match_all": {}
+  }
+}
+
+
+POST /multi_field_test/_doc
+{
+    "description":"To make this spaghetti carbonara, you first need to...",
+    "ingredients":["Spaghetti","Bacon","Eggs"]
+}
+
+GET /multi_field_test/_search
+{
+    "query":{
+        "match_all":{}
+    }
+}
+
+GET /multi_field_test/_search
+{
+    "query":{
+        "match":{
+            "ingredients":"Eggs"
+        }
+    }
+}
+
+GET /multi_field_test/_search
+{
+    "query":{
+        "match":{
+            "ingredients.keyword":"Spaghetti"
+        }
+    }
+}
+
+PUT /_template/access-logs
+{
+    "index_patterns":["access-logs-*"],
+    "settings":{
+        "number_of_shards":2,
+        "index.mapping.coerce":false
+    },
+    "mappings":{
+        "properties":{
+            "@timestamp":{
+                "type":"date"
+            },
+            "url.original":{
+                "type":"keyword"
+            },
+            "http.request.referrer":{
+                "type":"keyword"
+            },
+            "http.response.status_code":{
+                "type":"long"
+            }
+        }
+    }
+}
+
+PUT /access-logs-2020-01-01
+
+GET /access-logs-2020-01-01
+
+PUT /people
+{
+    "mappings":{
+        "properties":{
+            "first_name":{
+                "type":"text"
+            }
+        }
+    }
+}
+
+POST /people/_doc
+{
+    "first_name":"Ashiqul Islam",
+    "last_name":"Shajal"
+}
+
+GET /people/_mapping
+
+GET /people/_search
+{
+    "query":{
+        "match_all":{}
+    }
+}
+
+GET /people/_search
+{
+    "query":{
+        "match":{
+            "last_name":"SHAJAL"
+        }
+    }
+}
+
+DELETE /people
+
+PUT /people
+{
+    "mappings":{
+        "dynamic":false,
+        "properties":{
+            "first_name":{
+                "type":"text"
+            }
+        }
+    }
+}
+
+POST /people/_doc
+{
+    "first_name":"Ashiqul Islam",
+    "last_name":"Shajal"
+}
+
+GET /people/_search
+{
+    "query":{
+        "match":{
+            "first_name":"Ashiqul"
+        }
+    }
+}
+
+GET /people/_search
+{
+    "query":{
+        "match":{
+            "last_name":"SHAJAL"
+        }
+    }
+}
+
+DELETE /people
+
+PUT /people
+{
+    "mappings":{
+        "dynamic":"strict",
+        "properties":{
+            "first_name":{
+                "type":"text"
+            }
+        }
+    }
+}
+
+POST /people/_doc
+{
+    "first_name":"Ashiqul Islam",
+    "last_name":"Shajal"
+}
+
+POST /people/_doc
+{
+    "first_name":"Ashiqul Islam"
+}
+
+GET /people/_search
+{
+    "query":{
+        "match":{
+            "last_name":"SHAJAL"
+        }
+    }
+}
+
+DELETE /people
+
+PUT /dynamic_template_test
+{
+    "mappings":{
+        "dynamic_templates":[
+            {
+                "integers":{
+                    "match_mapping_type":"long",
+                    "mapping":{
+                        "type":"integer"
+                    }
+                }
+            }
+        ]
+    }
+}
+
+POST /dynamic_template_test/_doc
+{
+    "in_stock":123
+}
+
+GET /dynamic_template_test/_mapping
+
+PUT /products/_mapping
+{
+    "properties":{
+        "description":{
+            "type":"text",
+            "analyzer":"remove_english_stop_words"
+        }
+    }
+}
+
+POST /products/_doc
+{
+    "description":"Is that Peter's cute-looking dog?"
+}
+
+POST /_analyze
+{
+    "text":"I&apos;m in a <em>good</em> mood&nbsp;and I <strong>love</strong> acail!"
+}
+
+POST /_analyze
+{
+    "char_filter":["html_strip"],
+    "text":"I&apos;m in a <em>good</em> mood&nbsp;and I <strong>love</strong> acail!"
+}
+
+PUT /analyzer_test
+{
+    "settings":{
+        "analysis":{
+            "analyzer":{
+                "my_custom_analyzer":{
+                    "type":"custom",
+                    "char_filter":["html_strip"],
+                    "tokenizer":"standard"
+                }
+            }
+        }
+    }
+}
+
+PUT /analyzer_test
+{
+    "settings":{
+        "analysis":{
+            "filter":{
+                "bengali_stop":{
+                    "type":"stop",
+                    "stopwords":"_bengali_"
+                }
+            }
+            "analyzer":{
+                "my_custom_analyzer":{
+                    "type":"custom",
+                    "char_filter":["html_strip"],
+                    "tokenizer":"standard",
+                    "filter":[
+                        "lowercase",
+                        "stop",
+                        "asciifolding"
+                      ]
+                }
+            }
+        }
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

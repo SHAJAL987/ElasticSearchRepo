@@ -1,0 +1,44 @@
+enable apache2 module:
+----------------------
+1) go to on filebeat folder and run this comment:
+-------
+$ ./filebeat.exe modules enable apache
+
+2) Enable Elastic Search:
+-------------------------
+https://www.elastic.co/guide/en/beats/filebeat/current/filebeat-template.html#load-template-manually
+
+.\filebeat.exe setup --index-management -E output.logstash.enabled=false -E 'output.elasticsearch.hosts=["localhost:9200"]'
+
+install in linux: link: https://www.elastic.co/guide/en/beats/filebeat/current/setup-repositories.html#_yum
+------------------
+sudo rpm --import https://packages.elastic.co/GPG-KEY-elasticsearch
+
+touch /etc/yum.repos.d/filebeat.repo
+
+nano /etc/yum.repos.d/filebeat.repo
+
+[elastic-8.x]
+name=Elastic repository for 8.x packages
+baseurl=https://artifacts.elastic.co/packages/8.x/yum
+gpgcheck=1
+gpgkey=https://artifacts.elastic.co/GPG-KEY-elasticsearch
+enabled=1
+autorefresh=1
+type=rpm-md
+
+sudo yum install filebeat
+
+sudo systemctl enable filebeat
+
+sudo systemctl status filebeat
+
+"req_ip" =>"%{[source][address]}"
+
+
+
+"Could not set field 'address' on object '/var/log/httpd/access_log' to value '10.11.201.210'.This is probably due to trying to set a field like [foo][bar] = someValuewhen [foo] is not either a map or a string", :exception=>Java::OrgLogstash::Accessors::InvalidFieldSetException
+
+
+
+

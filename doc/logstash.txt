@@ -1,0 +1,11 @@
+bin/logstash -f "E:\Elastic Cluster\logstash-8.5.1\config\access_log.conf" --config.reload.automatic
+
+logstash-plugin install logstash-filter-ip2location
+
+oracle database data sync:
+---------------------------
+https://erangad.medium.com/pushing-relational-data-to-elasticsearch-using-logstash-jdbc-input-plugin-48af81ed1000
+
+multiple pipeline:
+------------------
+https://discuss.elastic.co/t/logstash-with-multiple-conf-files/255664

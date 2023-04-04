@@ -1,0 +1,146 @@
+zookeeper start: bin/zkServer.sh start
+----------------                                                                                                                   
+check zookeeper server status: 
+------------------------------
+zookeeper stop: bin/zkServer.sh stop
+--------------
+
+kafka start on foreground: bin/kafka-server-start.sh config/server.properties
+--------------------------
+kafka stop on foreground: bin/kafka-server-stop.sh config/server.properties
+------------------------
+kafka server status: echo dump | nc localhost 2181 | grep brokers
+-------------------
+kafka broker conroller: echo dump | nc localhost 2181
+----------------------
+kafka start on background: bin/kafka-server-start.sh -daemon config/server.properties
+--------------------------
+kafka stop on background: bin/kafka-server-stop.sh -daemon config/server.properties
+------------------------
+kafka log print: tail -100f logs/server.log
+---------------
+
+create a topic: bin/kafka-topics.sh --bootstrap-server 10.11.202.10:9092 --create --topic myTopic --partitions 1 --replication-factor 1
+---------------
+check all the topics: bin/kafka-topics.sh --bootstrap-server 10.11.202.10:9092 --list
+--------------------
+describe a topic: bin/kafka-topics.sh --bootstrap-server 10.11.202.10:9092 --describe --topic myTopic
+----------------
+delete a topic: ./bin/kafka-topics.sh --zookeeper localhost:2181 --delete --topic 'giorgos-.*'
+--------------
+
+create a producer: bin/kafka-console-producer.sh --bootstrap-server 10.11.202.10:9092 --topic myTopic
+-----------------
+create a consumer: bin/kafka-console-consumer.sh --bootstrap-server 10.11.200.109:9092 --topic elk_user.employees --from-beginning
+-----------------
+
+create kafka consumer groups list: bin/kafka-consumer-groups.sh --bootstrap-server 10.11.200.109:9092 --list
+---------------------------------
+custom kafka consumer groups: bin/kafka-console-consumer.sh --bootstrap-server 10.11.202.10:9092 --topic myTopic --group myConsumerGroup
+                              bin/kafka-console-consumer.sh --bootstrap-server 10.11.202.10:9092 --topic myTopic --group my-created-consumer-group
+----------------------------
+describe consumer groups: bin/kafka-consumer-groups.sh --bootstrap-server 10.11.202.10:9092 --describe --group console-consumer-28307
+------------------------
+
+zookeeper:
+----------
+mkdir /tmp/zookeeper-node-1
+mkdir /tmp/zookeeper-node-2
+mkdir /tmp/zookeeper-node-3
+
+echo 1 >> /tmp/zookeeper-node-1/myid
+echo 2 >> /tmp/zookeeper-node-2/myid
+echo 3 >> /tmp/zookeeper-node-3/myid
+
+cat /tmp/zookeeper-node-1/myid
+cat /tmp/zookeeper-node-2/myid
+cat /tmp/zookeeper-node-3/myid
+
+Running Kafka Connect : bin/connect-standalone.sh config/connect-standalone.properties connector1.properties [connector2.properties ...]
+				bin/connect-distributed.sh config/connect-distributed.properties
+-----------------------
+
+
+------------- confluent server -------------
+
+confluent local services start
+
+sudo update-alternatives --config java
+
+
+<path-to-confluent>/bin/ksql-server-start /home/elk-stack/elk/confluent-7.3.0
+/etc/ksqldb/ksql-server.properties
+
+important links:
+----------------
+Extend Swap: https://youtube.com/watch?v=UWLU7iZFgMo&feature=shares
+kafka connect: https://kafka.apache.org/documentation/#connect_running
+https://debezium.io/documentation/reference/1.9/connectors/oracle.html
+https://debezium.io/documentation/reference/1.9/install.html
+https://debezium.io/releases/1.9/
+https://avro.apache.org/docs/
+
+Problem and Solution:
+---------------------
+1) problem 1 : Supplemental logging not properly configured. Use: ALTER DATABASE ADD SUPPLEMENTAL LOG DATA
+solution: https://docs.oracle.com/database/121/SUTIL/GUID-D2DDD67C-E1CC-45A6-A2A7-198E4C142FA3.htm#SUTIL1583
+	    ALTER DATABASE ADD SUPPLEMENTAL LOG DATA;
+
+2) problem 2 : Redo logs may be sized too small using the default mining strategy, consider increasing redo log sizes to a minimum of 500MB.
+solution: https://logic.edchen.org/how-to-resize-redo-logs-in-oracle/
+	    select GROUP#,TYPE,MEMBER from v$logfile; --redo log file location
+	    alter database add logfile group 4 ('F:\ORACLE21C\ORADATA\XE\REDO01.log') size 2g, group 5 ('F:\ORACLE21C\ORADATA\XE\REDO01.log') size 2g, group 6 ('F:\ORACLE21C\ORADATA\XE\REDO03.log') size 2g;
+
+
+bin/connect-standalone.sh config/connect-standalone.properties config/ora-connector.properties
+bin/kafka-topics.sh --bootstrap-server 10.11.200.109:9092 --delete --topic elk_
+
+ ALTER TABLE ELK_USER.EMPLOYEES ADD SUPPLEMENTAL LOG DATA (ALL) COLUMNS;
+
+
+------------------------------------------------------------ FINAL -------------
+name=oracle-connector
+connector.class=io.debezium.connector.oracle.OracleConnector
+tasks.max=1
+topic.prefix=oracle_topic
+database.hostname=10.11.200.117
+database.port=1521
+database.dbname=XE
+database.user=sys as sysdba
+database.password=sys123
+database.pdb.name =XEPDB1
+database.server.name=DESKTOP-P7C7D44
+database.history=io.debezium.relational.history.FileDatabaseHistory
+database.history.file.filename=/home/fardaus/elk_abs/kafkaEnv/kafkaNode-1/kafka_2.13-3.3.1/config/history/file
+include.schema.changes=false
+table.whitelist=elk_user.employees
+table.include.list =elk_user.employees
+schema.history.internal.kafka.topic=debezium_schema_history
+bootstrap.servers=10.11.200.109:9092
+schema.history.internal.kafka.bootstrap.servers=10.11.200.109:9092,10.11.200.109:9093,10.11.200.109:9094
+
+-----------------
+SELECT name, open_mode FROM v$pdbs;
+ALTER PLUGGABLE DATABASE xepdb1 OPEN;
+
+set lines 300 
+set pages 3000
+col MEMBER for a60
+select * from v$Logfile;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

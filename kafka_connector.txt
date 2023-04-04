@@ -1,0 +1,3 @@
+https://www.confluent.io/hub/confluentinc/kafka-connect-jdbc
+
+https://www.confluent.io/hub/confluentinc/kafka-connect-elasticsearch
